@@ -107,7 +107,7 @@ if len(sys.argv) < 2:
     print("Usage: python md_to_page.py <content_path>")
     sys.exit(1)
 
-template_path = "post_template.html"
+template_path = "path/to/post_template.html"
 content_path = sys.argv[1] 
 output_path =  sys.argv[1] 
 
