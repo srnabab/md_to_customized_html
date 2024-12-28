@@ -4,6 +4,7 @@ change markdown file to formated html file
 <img width="627" alt="image" src="https://github.com/user-attachments/assets/458cdc1e-88a4-441c-bb48-f20f811e8275" />
 
 ## change path in bat file
+If you want to use this script, you need modify .py file and post_template.html
 
 # package
 1. Ruby
