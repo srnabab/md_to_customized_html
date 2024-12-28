@@ -5,22 +5,18 @@ import sys
 
 def parse_and_insert_html(template_path, content_path, output_path):
     try:
-        # 读取模板文件
         with open(template_path, 'r', encoding='utf-8') as template_file:
             template = template_file.read()
 
-        # 读取转换后的 HTML 文件
         with open(content_path, 'r', encoding='utf-8') as content_file:
             content = content_file.read()
 
-        # 使用 BeautifulSoup 解析模板和内容
         template_soup = BeautifulSoup(template, 'html.parser')
         content_soup = BeautifulSoup(content, 'html.parser')
 
-        # 找到模板中的目标插入点
         content_div = template_soup.find(attrs={"class": "content-box"})
         if not content_div:
-            raise ValueError("模板中未找到 class='content-box' 的 div")
+            raise ValueError("can't find div with class='content-box'")
         
         title_tag = template_soup.new_tag('p', attrs={"class": "title"})
         title_tag.string = content_path.split('.')[0]
@@ -50,10 +46,9 @@ def parse_and_insert_html(template_path, content_path, output_path):
         image_index = 0
         first_image_selected = False
 
-        # 遍历解析的内容 HTML，将第一个 <p> 替换为带有 class 的 <p>
         first_p_inserted = False
 
-        for tag in content_soup.find_all():  # 使用 find_all 获取所有标签
+        for tag in content_soup.find_all():
             if tag.string == None:
                 tag.string = ''
             if tag.string == matches[image_index]:
@@ -89,37 +84,33 @@ def parse_and_insert_html(template_path, content_path, output_path):
 
             if not first_p_inserted and tag.name == 'p':
 
-                # 创建一个带有 class 的 <p>
-                first_tag.string = tag.string  # 使用原始的文本内容
-                content_div.append(first_tag)  # 将新的 <p> 插入模板
-                first_p_inserted = True  # 只替换第一个 <p>
+                first_tag.string = tag.string
+                content_div.append(first_tag)
+                first_p_inserted = True
             else:
-                # 其他内容直接插入
-                content_div.append(tag)  # 将其他 <p> 插入模板
+                content_div.append(tag)
             
         if not first_p_inserted:
             content_div.append(first_tag)
 
-        # 将修改后的 HTML 写入输出文件
         with open(output_path, 'w', encoding='utf-8') as output_file:
             output_file.write(template_soup.encode(formatter='html').decode('utf-8'))
 
-        print(f"成功生成完整的 HTML 页面: {output_path}")
+        print(f"Successful: {output_path}")
 
     except FileNotFoundError as e:
-        print(f"文件未找到: {e}")
+        print(f"can't find: {e}")
     except Exception as e:
-        print(f"发生错误: {e}")
+        print(f"Error: {e}")
 
 if len(sys.argv) < 2:
     print("Usage: python md_to_page.py <content_path>")
     sys.exit(1)
 
-# 示例使用
 template_path = "post_template.html"
-content_path = sys.argv[1]  # 转换后的 HTML 文件路径
-output_path =  sys.argv[1] # 完整网页的输出路径
+content_path = sys.argv[1] 
+output_path =  sys.argv[1] 
 
-print(f"正在处理文件: {content_path}")
+print(f"Processing: {content_path}")
 
 parse_and_insert_html(template_path, content_path, output_path)
